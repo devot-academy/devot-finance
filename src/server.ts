@@ -7,8 +7,8 @@ dotenv.config()
 const app = express()
 const port = process.env.PORT || 3000
 
-const knexConfig = require('../knexfile')
-const knex = Knex(knexConfig.development)
+import knexConfig from '../knexfile'
+const knex = Knex(knexConfig)
 
 knex
   .raw('SELECT 1+1 as result')
@@ -21,14 +21,15 @@ knex
   .catch((error: any) => {
     console.error('Erro ao conectar ao banco de dados:', error)
   })
-  .finally(() => {
-    knex.destroy()
-  })
 
 app.get('/', (req, res) => {
   res.send('Hello, world!')
 })
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`)
-})
+app
+  .listen(port, () => {
+    console.log(`Server is running on port ${port}`)
+  })
+  .on('error', err => {
+    console.error('Erro ao iniciar o servidor:', err)
+  })
