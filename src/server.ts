@@ -1,16 +1,13 @@
 import express from 'express'
 import * as dotenv from 'dotenv'
-import Knex from 'knex'
+import { conn } from './lib/query-builder'
 
 dotenv.config()
 
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3001
 
-import knexConfig from '../knexfile'
-const knex = Knex(knexConfig)
-
-knex
+conn
   .raw('SELECT 1+1 as result')
   .then((result: { result: number }[][]) => {
     console.log(
