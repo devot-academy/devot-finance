@@ -13,7 +13,7 @@ router.get(
   transactionController.getTransactionsByUserId
 )
 
-router.get('/user', userController.listUsers) // Rota de listagem de usuários
+router.get('/user', userController.listUsers)
 router.post('/user', userController.createUser)
 
 router.post('/auth', authController.authenticateUser)
