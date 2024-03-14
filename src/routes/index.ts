@@ -1,11 +1,12 @@
 import express from 'express'
-import routes from './routes'
+import authRouter from './auth.routes'
+import transactionRouter from './transaction.routes'
+import userRouter from './user.routes'
 
-const app = express()
-const port = process.env.PORT || 3001
+const router = express.Router()
 
-app.use('/api', routes)
+router.use('/auth', authRouter)
+router.use('/transaction', transactionRouter)
+router.use('/user', userRouter)
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`)
-})
+export default router
