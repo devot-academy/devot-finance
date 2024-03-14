@@ -1,17 +1,22 @@
 import { Request, Response } from 'express'
+import { userModel } from '../model/user'
 
-export const authenticateUser = (req: Request, res: Response) => {
+export const authenticateUser = async (req: Request, res: Response) => {
   const { email, password } = req.body
 
-  const authenticatedUser = {
-    id: 1,
-    name: 'Usuário Autenticado',
-    email,
-    password: '***',
-    status: 1,
-    created_at: new Date(),
-    update_at: new Date()
+  const user = (await userModel.getAllUsers()).find(
+    user => user.email === email
+  )
+
+  if (!user) {
+    return res.status(401).json({ message: 'Usuário não existe' })
   }
 
-  res.json(authenticatedUser)
+  if (user.password !== password) {
+    return res
+      .status(401)
+      .json({ message: 'O email ou senha estão incorretos' })
+  }
+
+  res.status(200).json({ message: 'Autenticação bem-sucedida', user })
 }
