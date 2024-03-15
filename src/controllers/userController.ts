@@ -1,19 +1,41 @@
 import { Request, Response } from 'express'
+import * as userRepository from '../repository/user' 
 
-export const createUser = (req: Request, res: Response) => {
-  const { name, email, password } = req.body
+import { USER_STATUS } from '../consts';
 
-  const newUser = {
-    id: 1,
-    name,
-    email,
-    password,
-    status: 1,
-    created_at: new Date(),
-    update_at: new Date()
-  }
+type IUserData = {
+  name: string;
+  email: string;
+  password: string;
+}
 
-  res.status(201).json(newUser)
+export const createUser = async (req: Request, res: Response) => {
+    const { name, email, password }:IUserData = req.body || {};
+
+    if (!name || !email || !password ) return res.status(500).json({
+      message: "Campos incorretos",
+    });
+  
+    const userAlreadyExists = await userRepository.getUserByEmail(email);
+  
+    if (userAlreadyExists) return res.status(500).json({
+      message: "O usuário já esta cadastrado."
+    })
+
+    const now = new Date()
+  
+    const newUser = {
+      name,
+      email,
+      password,
+      status: USER_STATUS.ACTIVE,
+      created_at: now,
+      update_at: now
+    }
+
+    await userRepository.createUser(newUser);
+  
+    res.status(201).json({ message: 'Usuário cadastrado com sucesso!' })
 }
 export function listUsers(arg0: string, listUsers: any) {
   throw new Error('Function not implemented.')
