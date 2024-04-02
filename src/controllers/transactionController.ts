@@ -51,8 +51,16 @@ export const getTransactionsByUserId = (req: Request, res: Response) => {
       id: 2,
       userId: +userId,
       value: -20,
-      description: '',
+      description: 'Aluguel',
       type: 2,
+      date: new Date()
+    },
+    {
+      id: 3,
+      userId: +userId,
+      value: -10,
+      description: 'Café',
+      type: 3,
       date: new Date()
     }
   ]
