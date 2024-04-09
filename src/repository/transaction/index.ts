@@ -1,2 +1,2 @@
-export * from './createTransaction'
-export * from './getTransactionByUserId'
+export * from './create'
+export * from './getByUserId'
