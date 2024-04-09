@@ -37,6 +37,15 @@ export const createUser = async (req: Request, res: Response) => {
   
     res.status(201).json({ message: 'Usuário cadastrado com sucesso!' })
 }
-export function listUsers(arg0: string, listUsers: any) {
-  throw new Error('Function not implemented.')
+
+export const listUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await userRepository.getAll()
+
+    res.status(200).json(users)
+  }catch(error) {
+    return res.status(500).json({
+      message: "ERROR."
+    })
+  }
 }
