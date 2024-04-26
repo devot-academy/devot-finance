@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
-import { getTransactionByUserId } from '../repository/transaction/getByUserId'
-import { calculateDashboardData } from '../utils/calculateDashboardData'
+import * as transactionRepository from '../repository/transaction'
+import * as util from '../utils'
 
 const dashboardRouter = express.Router()
 
@@ -8,7 +8,7 @@ dashboardRouter.get('/dashboard', async (req: Request, res: Response) => {
   const userId = req.params.userId
 
   try {
-    const transactions = await getTransactionByUserId(+userId)
+    const transactions = await transactionRepository.getTransactionByUserId(+userId)
 
     if (!transactions || transactions.length === 0) {
       return res
@@ -16,7 +16,7 @@ dashboardRouter.get('/dashboard', async (req: Request, res: Response) => {
         .json({ message: 'No transactions found for this user.' })
     }
 
-    const dashboardData = calculateDashboardData(transactions)
+    const dashboardData = util.calculateDashboardData(transactions)
     res.json(dashboardData)
   } catch (error) {
     console.error('Error fetching transactions:', error)

@@ -1,32 +1,28 @@
 import {
   TRANSACTION_TYPE,
-  TransactionStatusValues
 } from '../consts/transaction'
 
-const getTransactionTypeName = (type: TransactionStatusValues) => {
-  switch (type) {
-    case TRANSACTION_TYPE.BALANCE:
-      return 'balance'
-    case TRANSACTION_TYPE.ESSENTIAL:
-      return 'essential'
-    case TRANSACTION_TYPE.SUPERFLUOUS:
-      return 'nonEssential'
-    default:
-      return ''
-  }
-}
+import { TransactionModel } from '../model/transaction'
 
-const calculateDashboardData = (transactions: any[]) => {
-  const essentialExpensesTotal = transactions
+export const calculateTest = () => {}
+
+export const calculateDashboardData = (transactions: TransactionModel[]) => {
+  const essencialTransactions = transactions
     .filter(transaction => transaction.type === TRANSACTION_TYPE.ESSENTIAL)
-    .reduce((total, transaction) => total + transaction.value, 0)
 
-  const nonEssentialExpensesTotal = transactions
+  const superfluousTransactions = transactions
     .filter(transaction => transaction.type === TRANSACTION_TYPE.SUPERFLUOUS)
+
+  const balanceTransactions = transactions
+    .filter(transaction => transaction.type === TRANSACTION_TYPE.BALANCE)
+
+  const essentialExpensesTotal = essencialTransactions
     .reduce((total, transaction) => total + transaction.value, 0)
 
-  const totalIncome = transactions
-    .filter(transaction => transaction.type === TRANSACTION_TYPE.BALANCE)
+  const nonEssentialExpensesTotal = superfluousTransactions
+    .reduce((total, transaction) => total + transaction.value, 0)
+
+  const totalIncome = balanceTransactions
     .reduce((total, transaction) => total + transaction.value, 0)
 
   const balance =
@@ -36,24 +32,21 @@ const calculateDashboardData = (transactions: any[]) => {
 
   const emergencyReserve = essentialExpensesTotal * 12
 
-  const incomeDetails = transactions
-    .filter(transaction => transaction.type === TRANSACTION_TYPE.BALANCE)
+  const incomeDetails = balanceTransactions
     .map(transaction => ({
-      name: getTransactionTypeName(transaction.type),
+      name: transaction.description,
       value: transaction.value
     }))
 
-  const essentialExpenseDetails = transactions
-    .filter(transaction => transaction.type === TRANSACTION_TYPE.ESSENTIAL)
+  const essentialExpenseDetails = essencialTransactions
     .map(transaction => ({
-      name: getTransactionTypeName(transaction.type),
+      name: transaction.description,
       value: transaction.value
     }))
 
-  const nonEssentialExpenseDetails = transactions
-    .filter(transaction => transaction.type === TRANSACTION_TYPE.SUPERFLUOUS)
+  const nonEssentialExpenseDetails = superfluousTransactions
     .map(transaction => ({
-      name: getTransactionTypeName(transaction.type),
+      name: transaction.description,
       value: transaction.value
     }))
 
@@ -70,4 +63,3 @@ const calculateDashboardData = (transactions: any[]) => {
   }
 }
 
-export default calculateDashboardData
