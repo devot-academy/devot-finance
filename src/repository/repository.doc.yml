@@ -1,0 +1,4 @@
+dir:
+  name: Repository
+  description: >
+    Entidade responsável em se comunicar com o banco. Contrado com o banco de dados.

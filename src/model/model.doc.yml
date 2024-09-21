@@ -1,0 +1,4 @@
+dir:
+  name: Model
+  description: >
+    Descreve como uma entidade é persistida no banco.
