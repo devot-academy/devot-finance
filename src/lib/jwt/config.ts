@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv'
 
 dotenv.config()
 
-const privateKey: jwt.Secret =  process.env.JWT_TOKEN || 'devot-admin';
+const privateKey: jwt.Secret =  process.env.PRIVATE_KEY_TOKEN || 'devot-admin';
 
 const config = {
     privateKey,
