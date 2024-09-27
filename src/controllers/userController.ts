@@ -11,6 +11,7 @@ type IUserData = {
 
 export const createUser = async (req: Request, res: Response) => {
     const { name, email, password }:IUserData = req.body || {};
+  
 
     if (!name || !email || !password ) return res.status(500).json({
       message: "Campos incorretos",
