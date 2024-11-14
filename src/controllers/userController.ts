@@ -1,41 +1,44 @@
 import { Request, Response } from 'express'
-import * as userRepository from '../repository/user' 
-
-import { USER_STATUS } from '../consts';
+import * as userRepository from '../repository/user'
+import { USER_STATUS } from '../consts'
 
 type IUserData = {
-  name: string;
-  email: string;
-  password: string;
+  name: string
+  email: string
+  password: string
 }
 
 export const createUser = async (req: Request, res: Response) => {
-    const { name, email, password }:IUserData = req.body || {};
+  const { name, email, password }: IUserData = req.body || {}
 
-    if (!name || !email || !password ) return res.status(500).json({
-      message: "Campos incorretos",
-    });
-  
-    const userAlreadyExists = await userRepository.getUserByEmail(email);
-  
-    if (userAlreadyExists) return res.status(500).json({
-      message: "O usuário já esta cadastrado."
+  if (!name || !email || !password) {
+    return res.status(400).json({
+      message: 'Campos incorretos'
     })
+  }
 
-    const now = new Date()
-  
-    const newUser = {
-      name,
-      email,
-      password,
-      status: USER_STATUS.ACTIVE,
-      created_at: now,
-      update_at: now
-    }
+  const userAlreadyExists = await userRepository.getUserByEmail(email)
 
-    await userRepository.createUser(newUser);
-  
-    res.status(201).json({ message: 'Usuário cadastrado com sucesso!' })
+  if (userAlreadyExists) {
+    return res.status(409).json({
+      message: 'O usuário já está cadastrado.'
+    })
+  }
+
+  const now = new Date()
+
+  const newUser = {
+    name,
+    email,
+    password,
+    status: USER_STATUS.ACTIVE,
+    created_at: now,
+    update_at: now
+  }
+
+  await userRepository.createUser(newUser)
+
+  res.status(201).json({ message: 'Usuário cadastrado com sucesso!' })
 }
 
 export const listUsers = async (req: Request, res: Response) => {
@@ -43,9 +46,9 @@ export const listUsers = async (req: Request, res: Response) => {
     const users = await userRepository.getAll()
 
     res.status(200).json(users)
-  }catch(error) {
+  } catch (error) {
     return res.status(500).json({
-      message: "ERROR."
+      message: 'Erro ao listar usuários'
     })
   }
 }
