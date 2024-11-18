@@ -1,4 +1,4 @@
-export * from './getUserByEmail'; 
-export * from './createUser'; 
-
-
+export * from './getByEmail'
+export * from './create'
+export * from './getAll'
+export * from './getById'
