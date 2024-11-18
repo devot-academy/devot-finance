@@ -3,6 +3,6 @@ import * as dashboardController from '../controllers/dashboardController'
 
 const dashboardRouter = express.Router()
 
-dashboardRouter.get('/dashboard', dashboardController.getDashboardData)
+dashboardRouter.get('/', dashboardController.getDashboardData)
 
 export default dashboardRouter

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import jwt from 'jsonwebtoken'
+import { decodeToken } from '../lib/jwt'
 import { getByEmail } from '../repository/auth'
 
 export const verifyToken = async (
@@ -18,14 +18,13 @@ export const verifyToken = async (
   const token = authorization.split(' ')[1]
 
   try {
-    const secretKey = process.env.JWT_SECRET || 'your_secret_key'
-    const tokenDecoded = jwt.verify(token, secretKey) as { email: string }
+    const tokenDecoded = decodeToken(token);
 
     if (!tokenDecoded) {
-      return res.status(401).json({ message: 'Token inválido. Não autorizado' })
+      return res.status(401).json({ message: 'Token inválido. Não autorizado jjj' })
     }
 
-    const { email } = tokenDecoded
+    const { email } = tokenDecoded as { email: string }
 
     const userAuth = await getByEmail(email)
 
