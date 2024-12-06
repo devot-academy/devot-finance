@@ -143,3 +143,27 @@ export const getTransactionsByUserId = async (
     return res.status(500).json({ message: 'Internal server error.' })
   }
 }
+
+export const deleteTransaction = async (req: Request, res: Response) => {
+  try {
+    const { id: transactionId } = req.params
+
+    if (!transactionId) {
+      return res.status(400).json({ message: 'ID da transação é obrigatório.' })
+    }
+
+    const transaction = await transactionRepository.getTransactionById(
+      transactionId
+    )
+
+    if (!transaction) {
+      return res.status(404).json({ message: 'Transação não encontrada.' })
+    }
+
+    await transactionRepository.getTransactionById(transactionId)
+    return res.status(200).json({ message: 'Transação removida com sucesso.' })
+  } catch (error) {
+    console.error('Erro ao deletar transação:', error)
+    return res.status(500).json({ message: 'Erro ao remover transação.' })
+  }
+}
