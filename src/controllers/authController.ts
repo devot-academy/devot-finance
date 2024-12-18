@@ -6,11 +6,14 @@ import { createToken, decodeToken } from '../lib/jwt'
 export const authenticateUser = async (req: Request, res: Response) => {
   const { email, password } = req.body
 
-  const userExists = await userRepository.getUserByEmail(email)
+  const userExists = await userRepository.getUserByEmail(email);
 
   if (!userExists ) {
     return res.status(400).json({ message: 'O email ou a senha está inválida.' })
   }
+
+  const { id } = userExists;
+
 
   if(userExists.password !== password) {
     return res.status(400).json({ message: 'O email ou a senha está inválida.' })
@@ -19,7 +22,10 @@ export const authenticateUser = async (req: Request, res: Response) => {
   const authExists = await authRepository.getByEmail(email);
 
   if (authExists && decodeToken(authExists?.token)) {
-      return res.status(200).json({ token: authExists?.token })
+      return res.status(200).json({ 
+        token: authExists?.token,
+        userId: id
+      })
   }
 
   if (authExists && !decodeToken(authExists?.token)) {
@@ -31,7 +37,10 @@ export const authenticateUser = async (req: Request, res: Response) => {
       token: newToken as string,
     })
 
-    return res.status(200).json({ token: newToken })
+    return res.status(200).json({ 
+      token: newToken,
+      userId: id
+    })
   }
 
   const newToken = createToken({ email })
@@ -40,7 +49,10 @@ export const authenticateUser = async (req: Request, res: Response) => {
     token: newToken as string,
   })
 
-  return res.status(200).json({ token: newToken })
+  return res.status(200).json({ 
+    token: newToken,
+    userId: id
+  })
 }
 
 
